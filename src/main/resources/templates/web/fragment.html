@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <title th:text="${title}">Title</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Free HTML Templates" name="keywords">
+    <meta content="Free HTML Templates" name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
+          rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link th:href="@{/web/css/owl.carousel.min.css}"
+          rel="stylesheet">
+    <link th:href="@{/web/css/jquery-ui.min.css}"
+          rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/style.css" rel="stylesheet" th:href="@{/web/css/style.css}">
+</head>
+<body>
+<!-- Topbar Start -->
+<div class="container-fluid" th:fragment="topbar">
+    <div class="row bg-secondary py-2 px-xl-5">
+        <div class="col-lg-6 d-none d-lg-block">
+            <div class="d-inline-flex align-items-center">
+                <a class="text-dark" href="">FAQs</a>
+                <span class="text-muted px-2">|</span>
+                <a class="text-dark" href="">Help</a>
+                <span class="text-muted px-2">|</span>
+                <a class="text-dark" href="">Support</a>
+            </div>
+        </div>
+        <div class="col-lg-6 text-center text-lg-right">
+            <div class="d-inline-flex align-items-center">
+                <a class="text-dark px-2" href="">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a class="text-dark px-2" href="">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a class="text-dark px-2" href="">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+                <a class="text-dark px-2" href="">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a class="text-dark pl-2" href="">
+                    <i class="fab fa-youtube"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="row align-items-center py-3 px-xl-5">
+        <div class="col-lg-3 d-none d-lg-block">
+            <a href="/" class="text-decoration-none">
+                <h1 class="m-0 display-5 font-weight-semi-bold">BookStore</h1>
+            </a>
+        </div>
+        <div class="col-lg-6 col-6 text-left">
+            <form th:action="@{/san-pham}" method="get">
+                <div class="input-group">
+                    <input type="text" id="search-auto-complete" name="title" class="form-control"
+                           placeholder="Tìm kiếm sách" onkeyup="autoCompleteTitle()">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn">
+                            <span class="input-group-text bg-transparent text-primary">
+                                <i class="fa fa-search"></i>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Topbar End -->
+
+<!-- Navbar Start -->
+<div class="container-fluid mb-5">
+    <div class="row border-top px-xl-5">
+        <div class="col-lg-3 d-none d-lg-block" th:fragment="category">
+            <a class="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100"
+               data-toggle="collapse" href="#navbar-vertical" style="height:65px; margin-top: -1px; padding: 0 30px;">
+                <h6 class="m-0">Danh mục</h6>
+                <i class="fa fa-angle-down text-dark"></i>
+            </a>
+            <nav class="collapse navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0"
+                 id="navbar-vertical">
+                <div class="navbar-nav w-100 overflow-hidden" id="listCategory">
+                    <!--                    load ajax-->
+                </div>
+            </nav>
+        </div>
+        <div class="col-lg-9">
+            <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0" th:fragment="nav-cart">
+                <a href="" class="text-decoration-none d-block d-lg-none">
+                    <h1 class="m-0 display-5 font-weight-semi-bold">BookStore</h1>
+                </a>
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                    <div class="navbar-nav mr-auto py-0">
+                        <a href="/" class="nav-item nav-link active content-link">Trang chủ</a>
+                        <a href="/san-pham" class="nav-item nav-link content-link">Sản phẩm</a>
+                        <a href="/ve-chung-toi" class="nav-item nav-link content-link">Về chúng tôi</a>
+                        <a href="/lien-he" class="nav-item nav-link content-link">Liên hệ</a>
+                    </div>
+                    <div class="navbar-nav ml-auto py-0" id="user-area">
+                        <a href='/gio-hang' class='nav-item nav-link' title='Giỏ hàng'><i
+                                class='fas fa-shopping-cart text-primary'></i></a>
+                        <a href='/dang-nhap' class='nav-item nav-link'>Đăng nhập</a>
+                    </div>
+                </div>
+            </nav>
+            <div id=" header-carousel" class="carousel slide" data-ride="carousel" th:fragment="carousel">
+                <ol class="carousel-indicators">
+                    <li data-target="#header-carousel" data-slide-to="0" class="active"></li>
+                    <li data-target="#header-carousel" data-slide-to="1"></li>
+                    <li data-target="#header-carousel" data-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="carousel-item active" style="height: 410px;">
+                        <img class="img-fluid" th:src="@{/web/images/banner/banner1.png}" alt="Image">
+                    </div>
+                    <div class="carousel-item" style="height: 410px;">
+                        <img class="img-fluid" th:src="@{/web/images/banner/banner2.png}" alt="Image">
+                    </div>
+                    <div class="carousel-item" style="height: 410px;">
+                        <img class="img-fluid" th:src="@{/web/images/banner/banner3.png}" alt="Image">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Navbar End -->
+
+<!-- Footer Start -->
+<div class="container-fluid bg-secondary text-dark mt-5 pt-5" th:fragment="footer">
+    <div class="row px-xl-5 pt-5">
+        <div class="col-lg-5 col-md-12 mb-5 pr-3 pr-xl-5">
+            <a href="" class="text-decoration-none">
+                <h1 class="mb-4 display-5 font-weight-semi-bold">BookStore</h1>
+            </a>
+            <p>Thiên đường sách Bookstore - nơi cung cấp nguồn tri thức của thế giới.</p>
+            <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>Khu phố 6, Linh Trung, Thủ Đức</p>
+            <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>bookstore@gmail.com</p>
+            <p class="mb-0"><i class="fa fa-phone-alt text-primary mr-3"></i>+012 345 67890</p>
+        </div>
+        <div class="col-lg-7 col-md-12">
+            <div class="row">
+                <div class="col-md-5 mb-5">
+                    <h5 class="font-weight-bold text-dark mb-4">Thông tin</h5>
+                    <div class="d-flex flex-column justify-content-start">
+                        <a class="text-dark mb-2" href="/"><i class="fa fa-angle-right mr-2"></i>Trang chủ</a>
+                        <a class="text-dark mb-2" href="/san-pham"><i class="fa fa-angle-right mr-2"></i>Sản
+                            phẩm</a>
+                        <a class="text-dark mb-2" href="/ve-chung-toi"><i
+                                class="fa fa-angle-right mr-2"></i>Về chúng tôi</a>
+                        <a class="text-dark" href="/lien-he"><i class="fa fa-angle-right mr-2"></i>Liên hệ</a>
+
+                    </div>
+                </div>
+                <div class="col-md-7 mb-5">
+                    <h5 class="font-weight-bold text-dark mb-4">Góp ý của bạn</h5>
+                    <form action="">
+                        <div class="form-group">
+                            <input type="text" class="form-control border-0 py-4" placeholder="Nhập tên của bạn"
+                                   required="required"/>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" class="form-control border-0 py-4" placeholder="Nhập email của bạn"
+                                   required="required"/>
+                        </div>
+                        <div>
+                            <button class="btn btn-primary btn-block border-0 py-3" type="submit">Gửi</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row border-top border-light mx-xl-5 py-4">
+        <div class="col-md-6 px-xl-0">
+            <p class="mb-md-0 text-center text-md-left text-dark">
+                &copy; <a class="text-dark font-weight-semi-bold" href="#">BookStore</a>. All Rights Reserved.
+                Designed
+                by HG
+            </p>
+        </div>
+    </div>
+</div>
+<!-- Footer End -->
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/web/js/easing.min.js}"></script>
+<script th:src="@{/web/js/owl.carousel.min.js}"></script>
+<script th:src="@{/web/js/jquery-ui.min.js}"></script>
+<!-- Template Javascript -->
+<script src="js/main.js" th:src="@{/web/js/main.js}"></script>
+<script>
+    function autoCompleteTitle() {
+        var searchValue = $("#search-auto-complete").val();
+        $.ajax({
+            url: "autocomplete?title=" + searchValue,
+            cache: false,
+            dataType: "json",
+            success: function (titles) {
+                $("#search-auto-complete").autocomplete({
+                    source: titles
+                });
+            }
+        })
+    }
+
+    $(function () {
+        //ajax user login
+        $.ajax({
+            url: "getUser", cache: false, dataType: "json", success: function (user) {
+                var str = "";
+                str += "<a href='/gio-hang' class='nav-item nav-link' title='Giỏ hàng'><i class = 'fas fa-shopping-cart text-primary'></i></a>";
+                if (user.email != null) {
+                    str += "<div class='dropdown'>";
+                    str += "<button style='border: none' class='btn dropdown-toggle nav-item nav-link' type='button' id='infor' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>";
+                    str += "Xin chào, " + user.username;
+                    str += "</button>";
+                    str += "<div class='dropdown-menu' aria-labelledby='infor'>";
+                    str += "<a class='dropdown-item' href='/thong-tin-tai-khoan'>Tài khoản</a>";
+                    str += "<a class='dropdown-item' href='/don-hang'>Đơn hàng</a>";
+                    for (let i of user.roles) {
+                        if (i.name == "ROLE_ADMIN") {
+                            str += "<a class='dropdown-item' href='/admin-page/book-management'>Trang Admin</a>";
+                        }
+                    }
+                    str += "<div class='dropdown-divider'></div>";
+                    str += "<a class='dropdown-item' href='/logout'>Thoát</a>";
+                    str += "</div>";
+                    str += "</div>";
+                } else {
+                    str += "<a href='/dang-nhap' class='nav-item nav-link'>Đăng nhập</a>";
+                }
+                $("#user-area").html(str);
+            }
+        });
+        //ajax category
+        $.ajax({
+            url: "/getCategory", type: "GET", cache: false, success: function (results) {
+                var str = "";
+                $.each(results, function (index, category) {
+                    str += "<a href='/san-pham?category=" + category.code + "' class='nav-item nav-link'>" + category.name + "</a>";
+                });
+                $("#listCategory").html(str);
+            }
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/fragment::head}">
+</head>
+<body>
+<div id="wrapper">
+    <!--    navbar-->
+    <nav th:replace="~{admin/fragment::navbar}"></nav>
+
+    <!--    content-->
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1>Quản lý sách</h1>
+                <ol class="breadcrumb">
+                    <li><a href="/admin-page/book-management"><i class="fa fa-book"></i> Quản lý sách</a></li>
+                    <li class="active"><i class="fa fa-table"></i> Chỉnh sửa sách</li>
+                </ol>
+            </div>
+        </div><!-- /.row -->
+        <div class="row">
+            <h3 class="text-center">Chỉnh sửa sách</h3>
+        </div>
+        <div class="row">
+            <form th:action="@{/admin-page/add-book}" method="post" th:object="${bookInput}"
+                  class="well form-horizontal" enctype="multipart/form-data">
+                <fieldset>
+                    <input type="hidden"
+                           name="id" class="form-control" th:value="${book.id}">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Hình ảnh</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <input type="file" id="images" name="images"
+                                   class="form-control-file"
+                                   accept="image/png, image/jpeg, image/jpg" onchange="loadImg(event)">
+                            <ul>
+                                <li id="img-list">
+                                    <img id="img" style="width: 100px; display:inline"
+                                         th:src="'/'+${book.images[0].path}" th:alt="${book.title}">
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Tiêu đề</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <textarea id="title" name="title"
+                                      class="form-control"
+                                      required="true" th:utext="${book.title}"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Mô tả</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <textarea id="description" name="description"
+                                      class="form-control" th:utext="${book.description}"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Năm xuất bản</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <select id="yearPublic" class="form-control" name="year_public">
+                                <th:block th:each="year: ${years}">
+                                    <option th:value="${year}" th:selected="${book.year_public == year}" th:text="${year}"></option>
+                                </th:block>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Tổng số trang</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <input id="totalPage"
+                                   name="total_page"
+                                   class="form-control" th:value="${book.total_page}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Nhà xuất bản</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <input id="publisher" name="publisher"
+                                   class="form-control"
+                                   th:value="${book.publisher}"
+                                   type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Giá</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <input id="price" name="price"
+                                   class="form-control"
+                                   required="true" th:value="${book.price}"
+                                   type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Phần trăm giảm</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <input id="discountPercent" name="discount_percent"
+                                   class="form-control"
+                                   th:value="${book.discountPercent}"
+                                   type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Số lượng đã bán</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <input id="quantitySold" name="quantitySold"
+                                   class="form-control"
+                                   th:value="${book.quantitySold}"
+                                   type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Danh mục</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <select class="form-control" id="category" name="categoryId">
+                                <th:block th:each="cat : ${categories}">
+                                    <th:block th:if="${cat.name} == ${book.category.getName()}">
+                                        <option th:value="${cat.categoryID}" th:utext="${cat.getName()}"
+                                                selected="selected"></option>
+                                    </th:block>
+                                    <th:block th:unless="${cat.name} == ${book.category.getName()}">
+                                        <option th:value="${cat.categoryID}" th:utext="${cat.getName()}"></option>
+                                    </th:block>
+                                </th:block>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Tác giả</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <select class="form-control" name="authorId" th:value="${book.author.name}">
+                                <th:block th:each="au : ${authors}">
+                                    <th:block th:if="${au.name} == ${book.author.getName()}">
+                                        <option th:value="${au.authorID}" th:utext="${au.getName()}"
+                                                selected="selected"></option>
+                                    </th:block>
+                                    <th:block th:unless="${au.name} == ${book.author.getName()}">
+                                        <option th:value="${au.authorID}" th:utext="${au.getName()}"></option>
+                                    </th:block>
+                                </th:block>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Sách mới</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <th:block th:if="${book.isNews()}">
+                                <input type="checkbox" name="news" checked>
+                            </th:block>
+                            <th:block th:unless="${book.isNews()}">
+                                <input type="checkbox" name="news">
+                            </th:block>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Sách hot</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <th:block th:if="${book.isHot()}">
+                                <input type="checkbox" name="hot" checked>
+                            </th:block>
+                            <th:block th:unless="${book.isHot()}">
+                                <input type="checkbox" name="hot">
+                            </th:block>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <button type="submit" class="btn btn-success">Cập nhật</button>
+                        <a type="button" class="btn btn-success" href="/admin-page/book-management">Trở lại</a>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+<th:block th:insert="~{admin/fragment::body/script}"></th:block>
+<script type="text/javascript">
+    var loadImg = function (event) {
+        var images = $("#images").val();
+        for (let i = 0; i < images.length; i++) {
+            var img = document.createElement("img");
+            img.style.width = '250px';
+            img.src = URL.createObjectURL(event.target.files[i]);
+            var imglist = document.getElementById("img-list");
+            imglist.append(img);
+        }
+    };
+
+    $("#yearPublic").val($("#yearPublic").val());
+</script>
+</body>
+</html>

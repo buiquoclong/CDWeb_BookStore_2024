@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/fragment::head}">
+</head>
+<body>
+<div id="wrapper">
+    <!--    navbar-->
+    <nav th:replace="~{admin/fragment::navbar}"></nav>
+
+    <!--    content-->
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1>Quản lý tài khoản</h1>
+                <ol class="breadcrumb">
+                    <li><a href="/admin-page/book-management"><i class="fa fa-book"></i> Quản lý tài khoản</a></li>
+                    <li class="active"><i class="fa fa-table"></i> Chỉnh sửa tài khoản</li>
+                </ol>
+            </div>
+        </div><!-- /.row -->
+        <div class="row">
+            <h3 class="text-center">Chỉnh sửa</h3>
+        </div>
+        <div class="row">
+            <form th:action="@{/admin-page/edit-account}" method="post" th:object="${user}"
+                  class="well form-horizontal">
+                <fieldset>
+                    <div class="form-group">
+                        <input type="hidden" name="userId" th:value="${account.userID}">
+                        <label class="col-md-4 control-label">Tên tài khoản</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <input disabled name="username" th:value="${account.username}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Email</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <input disabled name="email"
+                                   class="form-control" th:value="${account.email}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Trạng thái</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <input th:type="radio" value="true" name="status" id="status1" th:checked="${account.status}">
+                            <label for="status1">Hoạt động</label>
+                            <input th:type="radio" value="false" name="status" id="status2" th:checked="${!account.status}">
+                            <label for="status2">Ngừng hoạt động</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Ngày sửa đổi</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <input class="form-control" name="updatedAt" type="date" th:value="${account.updatedAt}">
+                        </div>
+                    </div>
+                    <div class="form-group" th:if="!${account.isContain('ROLE_ADMIN')}">
+                        <label class="col-md-4 control-label">Vai trò</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <input type="checkbox" value="ROLE_ADMIN" name="roleName" id="roleCheck">
+                            <label for="roleCheck">Quản trị viên</label>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <button type="submit" class="btn btn-success">Cập nhật</button>
+                        <a type="button" class="btn btn-success btn-return" href="/admin-page/account-management">Trở
+                            lại</a>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+<th:block th:insert="~{admin/fragment::body/script}"></th:block>
+</body>
+</html>

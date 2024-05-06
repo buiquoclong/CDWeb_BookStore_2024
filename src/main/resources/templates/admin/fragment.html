@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head">
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Admin page</title>
+    <link rel="stylesheet" th:href="@{/admin/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css">
+</head>
+<body>
+<!-- Sidebar -->
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" th:fragment="navbar">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/admin-page/book-management">Bookstore admin</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse navbar-ex1-collapse">
+        <ul class="nav navbar-nav side-nav">
+            <li><a href="/admin-page/book-management"><i class="fa fa-book"></i> Quản lý sách</a></li>
+            <li><a href="/admin-page/category-management"><i class="fa fa-bookmark"></i> Quản lý danh mục</a></li>
+            <li><a href="/admin-page/author-management"><i class="fa fa fa-edit"></i> Quản lý tác giả</a></li>
+            <li><a href="/admin-page/order-management"><i class="fa fa-shopping-cart"></i> Quản lý đơn hàng</a></li>
+            <li><a href="/admin-page/account-management"><i class="fa fa-users"></i> Quản lý tài khoản</a></li>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right navbar-user">
+
+        </ul>
+    </div><!-- /.navbar-collapse -->
+</nav>
+
+<!-- JavaScript -->
+<script th:src="@{/admin/js/jquery-3.5.1.js}"></script>
+<script th:src="@{/admin/js/bootstrap.js}"></script>
+
+<!-- Page Specific Plugins -->
+<script th:src="@{/admin/js/custom.js}"></script>
+<script th:src="@{/admin/js/jquery.dataTables.min.js}"></script>
+<script th:src="@{/admin/js/dataTables.bootstrap.min.js}"></script>
+<script>
+    $(function () {
+        $.ajax({
+            url: "getAdmin",
+            cache: false,
+            dataType: "json",
+            success: function (user) {
+                var str = "";
+                if (user.email != null) {
+                    str += "<li class='dropdown user-dropdown'>";
+                    str += "<a class='dropdown-toggle' data-toggle='dropdown'><i style='margin-right: 5px' class='fa fa-user'></i>Xin chào, "+user.username+"<b class='caret'></b></a>";
+                    str += "<ul class='dropdown-menu'>";
+                    str += "    <li><a href='/thong-tin-tai-khoan'><i class='fa fa-user'></i> Tài khoản</a></li>";
+                    str += "    <li><a href='/'><i class='fa fa-gear'></i> Trang chủ</a></li>";
+                    str += "    <li class='divider'></li>";
+                    str += "    <li><a href='/logout'><i class='fa fa-power-off'></i> Đăng xuất</a></li>";
+                    str += "</ul>";
+                    str += "</li>";
+                }
+                $(".navbar-user").html(str);
+            }
+        })
+    })
+</script>
+</body>
+</html>

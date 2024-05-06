@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="web/fragment::head(title='Bookstore - Đặt hàng')">
+</head>
+
+<body>
+<!-- Topbar Start -->
+<div th:replace="~{web/fragment::topbar}"></div>
+
+
+<!-- Navbar Start -->
+<div class="container-fluid mb-5">
+    <div class="row border-top px-xl-5">
+        <div th:replace="~{web/fragment::category}"></div>
+        <div class="col-lg-9">
+            <nav th:replace="~{web/fragment::nav-cart}"></nav>
+        </div>
+    </div>
+</div>
+<!-- Navbar End -->
+
+
+<!-- Page Header Start -->
+<div class="container-fluid bg-secondary mb-2">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 100px">
+        <div class="d-inline-flex">
+            <p class="m-0"><a href="/">Trang chủ</a></p>
+            <p class="m-0 px-2">-</p>
+            <p class="m-0">Thanh toán</p>
+        </div>
+    </div>
+</div>
+<!-- Page Header End -->
+
+
+<!-- Checkout Start -->
+<div class="container-fluid pt-5">
+    <form th:action="@{/dat-hang}" method="post" onsubmit="return checkAddress() && checkPhone()" th:object="${order}">
+        <div class="row px-xl-5">
+            <div class="col-lg-6">
+                <div class="mb-4" id="shipping-address">
+                    <h4 class="font-weight-semi-bold mb-4">Xác nhận thanh toán</h4>
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label>Họ và tên</label>
+                            <input th:value="${user.fullname} ? ${user.fullname}" class="form-control" type="text"
+                                   placeholder="Họ và tên" name="name">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>E-mail</label>
+                            <input th:value="${user.email}" class="form-control" type="text"
+                                   placeholder="Vui lòng nhập email" name="email">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Số điện thoại</label>
+                            <input id="phone" onblur="checkPhone()" th:value="${user.phone} ? ${user.phone}"
+                                   class="form-control"
+                                   type="text" placeholder="Nhập số điện thoại" name="phone">
+                            <span id='phoneError' class='text-center' style='color: red; font-size: smaller'></span>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Địa chỉ</label>
+                            <input id="address" class="form-control" onblur="checkAddress()" type="text"
+                                   placeholder="Nhập địa chỉ" name="address">
+                            <span id='addressError' class='text-center' style='color: red; font-size: smaller'></span>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Ghi chú</label>
+                            <textarea class="form-control"
+                                      placeholder="Ghi chú (Nếu có)" name="note"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card border-secondary mb-5">
+                    <div class="card-header bg-secondary border-0">
+                        <h4 class="font-weight-semi-bold m-0">Thông tin đơn hàng</h4>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="font-weight-medium mb-3">Sản phẩm</h5>
+                        <th:block th:each="item: ${items.booksList}">
+                            <div class="d-flex justify-content-between">
+                                <input type="checkbox" checked style="display: none"
+                                       name="carts" field="carts" th:value="${item.cartID}">
+                                <p style="width: 300px" class="text-truncate"><a th:title="${item.book.title}"
+                                                                                 style="font-size: smaller"
+                                                                                 th:href="@{/chi-tiet(id=${item.book.id})}"
+                                                                                 th:utext="${item.book.title}"></a></p>
+                                <p style="margin-right: 5px" th:utext="'x' +${item.quantity}"></p>
+                                <p th:utext="${item.totalFormat}"></p>
+                            </div>
+                        </th:block>
+                        <hr class="mt-0">
+                        <div class="d-flex justify-content-between mb-3 pt-1">
+                            <h6 class="font-weight-medium">Subtotal</h6>
+                            <h6 class="font-weight-medium" th:utext="${items.totalFormat}"></h6>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <h6 class="font-weight-medium">Phí vận chuyển</h6>
+                            <h6 class="font-weight-medium">15,000VND</h6>
+                        </div>
+                    </div>
+                    <div class="card-footer border-secondary bg-transparent">
+                        <div class="d-flex justify-content-between mt-2">
+                            <h5 class="font-weight-bold">Tổng cộng</h5>
+                            <h5 class="font-weight-bold" th:utext="${items.format}"></h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent text-center">
+                    <button type="submit" class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3">Thanh
+                        toán
+                    </button>
+                    <a th:href="@{/}">Tiếp tục mua hàng</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- Checkout End -->
+
+
+<!-- Footer Start -->
+<div th:replace="~{web/fragment::footer}"></div>
+<!-- Footer End -->
+
+
+<!-- Back to Top -->
+<a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+<!--script file-->
+<th:block th:insert="~{web/fragment::body/script}"></th:block>
+<script>
+    function checkAddress() {
+        var addressValue = $("#address").val();
+        if (addressValue.length == 0) {
+            $("#addressError").html("Vui lòng nhập địa chỉ");
+        } else $("#addressError").html("");
+    }
+</script>
+</body>
+
+</html>
