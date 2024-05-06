@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="web/fragment::head(title='Product detail')">
+</head>
+
+<body>
+<!-- Topbar Start -->
+<div th:replace="~{web/fragment::topbar}"></div>
+
+
+<!-- Navbar Start -->
+<div class="container-fluid mb-5">
+    <div class="row border-top px-xl-5">
+        <div th:replace="~{web/fragment::category}"></div>
+        <div class="col-lg-9">
+            <nav th:replace="~{web/fragment::nav-cart}"></nav>
+        </div>
+    </div>
+</div>
+<!-- Navbar End -->
+
+
+<!-- Page Header Start -->
+<div class="container-fluid bg-secondary mb-2">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 100px">
+        <div class="d-inline-flex">
+            <p class="m-0"><a href="/">Trang chủ</a></p>
+            <p class="m-0 px-2">-</p>
+            <p class="m-0">Chi tiết sản phẩm</p>
+        </div>
+    </div>
+</div>
+<!-- Page Header End -->
+
+
+<!-- Shop Detail Start -->
+<div class="container-fluid py-5" id="detailBook">
+    <div class="row px-xl-5">
+        <div class="col-lg-5 pb-5">
+            <div id="product-carousel" class="carousel slide" data-ride="carousel">
+
+            </div>
+        </div>
+
+        <div class="col-lg-7 pb-5" id="detailArea">
+            <!--            load ajax-->
+        </div>
+    </div>
+    <div class="row px-xl-5">
+        <div class="col">
+            <div class="nav nav-tabs justify-content-center border-secondary mb-4">
+                <a class="nav-item nav-link active" data-toggle="tab" href="#tab-pane-1">Mô tả</a>
+                <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-2">Thông tin</a>
+            </div>
+            <div class="tab-content">
+                <!--                load ajax-->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Shop Detail End -->
+
+
+<!-- Products Start -->
+<div class="container-fluid py-5">
+    <div class="text-center mb-4">
+        <h4 class="section-title px-5"><span class="px-2">Có thể bạn sẽ thích</span></h4>
+    </div>
+    <div class="row px-xl-5">
+        <div class="col">
+            <div class="owl-carousel related-carousel">
+                <div class="card product-item border-0" th:each="book: ${list}">
+                    <div style='height: 150px' class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <img style="object-fit: contain" class="img-fluid" th:src="${book.images[0].path}"
+                             th:alt="${book.title}">
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3" th:text="${book.title}"></h6>
+                        <div class="d-flex justify-content-center">
+                            <h6 class="new-price" th:text="${book.getDiscountPrice()}"></h6>
+                            <h6 class="text-muted ml-2">
+                                <del th:utext="${book.discountPercent} ? ${book.formatPrice(book.price)}"></del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a th:href="@{/chi-tiet(id=${book.id})}" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-eye text-primary mr-1"></i>Chi tiết</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-shopping-cart text-primary mr-1"></i>Giỏ hàng</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Products End -->
+
+
+<!-- Footer Start -->
+<div th:replace="~{web/fragment::footer}"></div>
+<!-- Footer End -->
+
+
+<!-- Back to Top -->
+<a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+<!--script file-->
+<th:block th:insert="~{web/fragment::body/script}"></th:block>
+<script>
+    $(function () {
+        var bookId = window.location.search;
+        $.ajax({
+            url: "getDetailBook" + bookId,
+            cache: false,
+            dataType: "json",
+            success: function (book) {
+                var detail = "";
+                var info = "";
+                var img = "";
+                img += "<div class='carousel-inner' style='max-height: 350px'>";
+                for (let i = 0; i < book.images.length; i++) {
+                    if (i == 0) {
+                        img += "<div class='carousel-item active'>";
+                        img += "<img class='w-50 detail-img' src='" + book.images[i].path + "' alt='" + book.title + "'>";
+                        img += "</div>";
+                    } else {
+                        img += "<div class='carousel-item'>";
+                        img += "<img class='w-50 detail-img' src='" + book.images[i].path + "' alt='" + book.title + "'>";
+                        img += "</div>";
+                    }
+                }
+                img += "</div>";
+                $("#product-carousel").html(img);
+
+                detail += "<h3 class='font-weight-semi-bold'>" + book.title + "</h3>";
+                detail += "<small class='pt-1 mb-1' style='display: block'>Tác giả: <a href='/san-pham?author=" + book.author.authorCode + "'>" + book.author.name + "</a></small>";
+                detail += "<small class='pt-1' style='display: block'>Số lượng đã bán: " + book.quantitySold + "</small>";
+                detail += "<h6 class='old-price text-muted' style='text-decoration: line-through; display:inline'>";
+                detail += book.discountPercent ? book.priceFormat : '';
+                detail += "</h6>";
+                detail += "<span class='text-danger ml-2'>";
+                detail += book.discountPercent ? book.percentFormat : '';
+                detail += "</span>";
+                detail += "<h3 class='font-weight-semi-bold mb-4 new-price'>";
+                detail += book.discountPrice;
+                detail += "</h3>";
+                detail += "<div class='d-flex align-items-center mb-4 pt-2'>";
+                detail += "<button onclick='addToCart(" + book.id + "," + 1 + ")' class='btn btn-primary px-3'><i class='fa fa-shopping-cart mr-1'></i> Thêm vào giỏ hàng</button>";
+                detail += "</div>";
+                $("#detailArea").html(detail);
+
+                info += "<div class='tab-pane fade show active' id='tab-pane-1'>";
+                info += "<h4 class='mb-3'>Mô tả</h4>";
+                info += "<p>" + book.description + "</p>";
+                info += "</div>";
+                info += "<div class='tab-pane fade' id='tab-pane-2'>";
+                info += "<h4 class='mb-3'>Thông tin bổ sung</h4>";
+                info += "<p>TỔNG SỐ TRANG: " + book.total_page + "</p>";
+                info += "<p>NĂM PHÁT HÀNH: " + book.year_public + "</p>";
+                info += "<p>NHÀ PHÁT HÀNH: " + book.publisher + "</p>";
+                info += "</div>";
+                $(".tab-content").html(info);
+            }
+        })
+    })
+</script>
+</body>
+
+</html>

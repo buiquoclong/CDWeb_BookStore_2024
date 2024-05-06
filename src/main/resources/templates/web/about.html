@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="web/fragment::head(title='About us')">
+</head>
+<body>
+<!-- Topbar Start -->
+<div th:replace="~{web/fragment::topbar}"></div>
+
+<!-- Navbar Start -->
+<div class="container-fluid mb-5">
+    <div class="row border-top px-xl-5">
+        <div th:replace="~{web/fragment::category}"></div>
+        <div class="col-lg-9">
+            <nav th:replace="~{web/fragment::nav-cart}"></nav>
+        </div>
+    </div>
+</div>
+<!-- Navbar End -->
+
+<!-- Page Header Start -->
+<div class="container-fluid bg-secondary mb-2">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 100px">
+        <div class="d-inline-flex">
+            <p class="m-0"><a href="/">Trang chủ</a></p>
+            <p class="m-0 px-2">-</p>
+            <p class="m-0">Về chúng tôi</p>
+        </div>
+    </div>
+</div>
+<!-- Page Header End -->
+<div class="main">
+    <div class="container-fluid py-5">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content m-3">
+                    <div class="d-flex justify-content-center">BookStore - Sứ mệnh của chúng tôi là mang đến cho khách
+                        hàng những cuốn sách với nội dung hay và
+                        giá cả hợp lí
+                        - với qui mô vừa nhỏ nhưng chúng tôi luôn mong sự ủng hô của quí khách cùng với sự
+                        nổ lực với phương châm" Sách là bạn khách hàng là thượng đế" nhà sách sẽ ngày càng
+                        phát triển mạnh mẽ và ngày càng phát triền vưng mạnh và đáp ứng nhu cầu đọc sách
+                        truyền thống cũng như việc đọc sách điện tử ngày càng đồi mới và hiện đại hơn!<br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Footer Start -->
+<div th:replace="~{web/fragment::footer}"></div>
+<!-- Footer End -->
+
+<!--script file-->
+<th:block th:insert="~{web/fragment::body/script}"></th:block>
+</body>
+</html>

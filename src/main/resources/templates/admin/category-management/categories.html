@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin page</title>
+    <th:block th:insert="~{admin/fragment::head/link}"></th:block>
+</head>
+<body>
+<div id="wrapper">
+    <!--    navbar-->
+    <nav th:replace="~{admin/fragment::navbar}"></nav>
+
+    <!--    content-->
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1>Quản lý danh mục</h1>
+                <ol class="breadcrumb">
+                    <li class="active"><i class="fa fa-bookmark"></i> Quản lý danh mục</li>
+                </ol>
+            </div>
+        </div><!-- /.row -->
+        <div class="row" style="margin-bottom: 20px">
+            <div class="col-lg-12">
+                <button class="btn btn-primary"><a href="/admin-page/add-category-page" class="btn-link">Thêm danh mục</a></button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="table-responsive">
+                    <table id="data-table" class="table table-striped table-bordered" style="width:100%">
+                        <thead>
+                        <tr>
+                            <th>Tên danh mục</th>
+                            <th>Code</th>
+                            <th>Ngày tạo</th>
+                            <th>Ngày sửa đổi</th>
+                            <th>Thao tác</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <th:block th:each="cat: ${cats}">
+                            <tr>
+                                <td th:utext="${cat.name}"></td>
+                                <td th:utext="${cat.code}"></td>
+                                <td th:utext="${cat.createdAt}"></td>
+                                <td th:utext="${cat.updatedAt}"></td>
+                                <td>
+                                    <a type="button" title="Chỉnh sửa" class="btn btn-success btn-action" th:href="@{/admin-page/edit-category-page(id=${cat.categoryID})}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                    <a type="button" data-toggle="tooltip" title="Xóa" class="btn btn-danger btn-action"
+                                       th:href="@{/admin-page/delete-category(id=${cat.categoryID})}"
+                                       onclick="return confirm('Bạn có chắc muốn xóa')">
+                                        <i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                </td>
+                            </tr>
+                        </th:block>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div><!-- /.row -->
+    </div>
+
+</div><!-- /#wrapper -->
+
+<th:block th:insert="~{admin/fragment::body/script}"></th:block>
+</body>
+</html>

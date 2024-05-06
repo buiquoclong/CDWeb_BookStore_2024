@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="web/fragment::head(title='Bookstore')">
+</head>
+
+<body>
+<!-- Topbar Start -->
+<div th:replace="~{web/fragment::topbar}"></div>
+<!-- Navbar Start -->
+<div class="container-fluid mb-5">
+    <div class="row border-top px-xl-5">
+        <div th:replace="~{web/fragment::category}"></div>
+        <div class="col-lg-9">
+            <nav th:replace="~{web/fragment::nav-cart}"></nav>
+            <div th:replace="~{web/fragment::carousel}"></div>
+        </div>
+    </div>
+</div>
+<!-- Navbar End -->
+
+<!-- Featured Start -->
+<div class="container-fluid pt-5">
+    <div class="row px-xl-5 pb-3">
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+            <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
+                <h2 class="fa fa-check text-primary m-0 mr-3"></h2>
+                <h5 class="font-weight-semi-bold m-0">Sản phẩm chất lượng</h5>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+            <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
+                <h2 class="fa fa-shipping-fast text-primary m-0 mr-2"></h2>
+                <h5 class="font-weight-semi-bold m-0">Giao hàng miễn phí</h5>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+            <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
+                <h2 class="fas fa-exchange-alt text-primary m-0 mr-3"></h2>
+                <h5 class="font-weight-semi-bold m-0">Đổi trả trong vòng 14 ngày</h5>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+            <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
+                <h2 class="fa fa-phone-volume text-primary m-0 mr-3"></h2>
+                <h5 class="font-weight-semi-bold m-0">Hỗ trợ khách hàng 24/7</h5>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Featured End -->
+
+<!-- Offer Start -->
+<div class="container-fluid offer pt-5">
+    <div class="row px-xl-5">
+        <div class="col-md-6 pb-4">
+            <div class="position-relative bg-secondary text-center text-md-right text-white mb-2 py-5 px-5">
+                <div class="position-relative" style="z-index: 1;">
+                    <h5 class="text-uppercase text-primary mb-3">Giảm giá lên đến 20%</h5>
+                    <h1 class="mb-4 font-weight-semi-bold">Sách hay giảm giá</h1>
+                    <a th:href="@{san-pham(discount=20)}" class="btn btn-outline-primary py-md-2 px-md-3">Mua ngay</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 pb-4">
+            <div class="position-relative bg-secondary text-center text-md-left text-white mb-2 py-5 px-5">
+                <div class="position-relative" style="z-index: 1;">
+                    <h5 class="text-uppercase text-primary mb-3">Giảm giá lên đến 30%</h5>
+                    <h1 class="mb-4 font-weight-semi-bold">Xả kho chào hè</h1>
+                    <a th:href="@{san-pham(discount=30)}" class="btn btn-outline-primary py-md-2 px-md-3">Mua ngay</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Offer End -->
+
+
+<!-- Products Start -->
+<div class="container-fluid pt-5">
+    <div class="text-center mb-4">
+        <h2 class="section-title px-5"><span class="px-2">SÁCH BÁN CHẠY</span></h2>
+    </div>
+    <div class="row px-xl-5 pb-3" id="hotArea">
+        <!--        load ajax-->
+    </div>
+    <div class="row mt-2 text-center">
+        <div class="col">
+            <button class="btn btn-more"><a th:href="@{san-pham(hot=true)}">Xem thêm</a></button>
+        </div>
+    </div>
+</div>
+<!-- Products End -->
+
+
+<!-- Products Start -->
+<div class="container-fluid pt-5">
+    <div class="text-center mb-4">
+        <h2 class="section-title px-5"><span class="px-2">SÁCH MỚI NHẤT</span></h2>
+    </div>
+    <div class="row px-xl-5 pb-3" id="newArea">
+        <!--        load ajax-->
+    </div>
+    <div class="row mt-2 text-center">
+        <div class="col">
+            <button class="btn btn-more"><a th:href="@{san-pham(news=true)}">Xem thêm</a></button>
+        </div>
+    </div>
+</div>
+<!-- Products End -->
+
+
+<!-- Vendor Start -->
+<div class="container-fluid py-5">
+    <div class="row text-center">
+        <div class="col">
+            <h4 class="mb-4">NHÀ XUẤT BẢN</h4>
+        </div>
+    </div>
+    <div class="row px-xl-5">
+        <div class="col">
+            <div class="owl-carousel vendor-carousel">
+                <div class="vendor-item p-4">
+                    <img th:src="@{/web/images/publisher/nxb1.png}" alt="">
+                </div>
+                <div class="vendor-item p-4">
+                    <img th:src="@{/web/images/publisher/nxb2.png}" alt="">
+                </div>
+                <div class="vendor-item p-4">
+                    <img th:src="@{/web/images/publisher/nxb3.jpg}" alt="">
+                </div>
+                <div class="vendor-item p-4">
+                    <img th:src="@{/web/images/publisher/nxb4.png}" alt="">
+                </div>
+                <div class="vendor-item p-4">
+                    <img th:src="@{/web/images/publisher/nxb5.png}" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Vendor End -->
+
+
+<!-- Footer Start -->
+<div th:replace="~{web/fragment::footer}"></div>
+<!-- Footer End -->
+
+
+<!-- Back to Top -->
+<a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+<!--script file-->
+<th:block th:insert="~{web/fragment::body/script}"></th:block>
+<script>
+    $(function () {
+        //load hot book
+        $.ajax({
+            url: "hot-book",
+            cache: false,
+            dataType: "json",
+            success: function (result) {
+                var str = "";
+                for (let item of result) {
+                    str += "<div class='col-lg-3 col-md-6 col-sm-12 pb-1'>";
+                    str += "<div class='card product-item border-0 mb-4'>";
+                    str += "<div style='height: 250px' class='card-header product-img position-relative overflow-hidden bg-transparent border p-0 d-flex justify-content-center'>";
+                    str += "<img class='img-fluid' src='" + item.images[0].path + "' alt='" + item.title + "' style='object-fit: contain'>";
+                    str += "</div>";
+                    str += "<div class='card-body border-left border-right text-center pt-4 pb-3'>";
+                    str += "<h6 class='text-truncate mb-3 text-danger' title='" + item.title + "'>" + item.title + "</h6>";
+                    str += "<div class='d-flex justify-content-center'>";
+                    str += "<h6 class='new-price'>" + item.discountPrice + "</h6>";
+                    str += "<span class='text-danger ml-2'>";
+                    str += item.discountPercent ? item.percentFormat : "";
+                    str += "</span>";
+                    str += "</div>";
+                    str += "</div>";
+                    str += "<div class='card-footer d-flex justify-content-between bg-light border'>";
+                    str += "<a href='chi-tiet?id=" + item.id + "' class='btn btn-sm text-dark p-0'><i class='fas fa-eye text-primary mr-1'></i>Chi tiết</a>";
+                    str += "<a onclick='addToCart(" + item.id + "," + 1 + ")' class='btn btn-sm text-dark p-0'><i class='fas fa-shopping-cart text-primary mr-1'></i>Giỏ hàng</a>";
+                    str += "</div>";
+                    str += "</div>";
+                    str += "</div>";
+                }
+                $("#hotArea").html(str);
+            }
+        });
+
+        //load new book
+        $.ajax({
+            url: "new-book",
+            cache: false,
+            dataType: "json",
+            success: function (result) {
+                var str = "";
+                for (let item of result) {
+                    str += "<div class='col-lg-3 col-md-6 col-sm-12 pb-1'>";
+                    str += "<div class='card product-item border-0 mb-4'>";
+                    str += "<div style='height: 250px' class='card-header product-img position-relative overflow-hidden bg-transparent border p-0 d-flex justify-content-center'>";
+                    str += "<img class='img-fluid' src='" + item.images[0].path + "' alt='" + item.title + "' style='object-fit: contain'>";
+                    str += "</div>";
+                    str += "<div class='card-body border-left border-right text-center pt-4 pb-3'>";
+                    str += "<h6 class='text-truncate mb-3 text-danger' title='" + item.title + "'>" + item.title + "</h6>";
+                    str += "<div class='d-flex justify-content-center'>";
+                    str += "<h6 class='new-price'>" + item.discountPrice + "</h6>";
+                    str += "<span class='text-danger ml-2'>";
+                    str += item.discount_percent ? item.percentFormat : "";
+                    str += "</span>";
+                    str += "</div>";
+                    str += "</div>";
+                    str += "<div class='card-footer d-flex justify-content-between bg-light border'>";
+                    str += "<a href='chi-tiet?id=" + item.id + "' class='btn btn-sm text-dark p-0'><i class='fas fa-eye text-primary mr-1'></i>Chi tiết</a>";
+                    str += "<a onclick='addToCart(" + item.id + "," + 1 + ")' class='btn btn-sm text-dark p-0'><i class='fas fa-shopping-cart text-primary mr-1'></i>Giỏ hàng</a>";
+                    str += "</div>";
+                    str += "</div>";
+                    str += "</div>";
+                }
+                $("#newArea").html(str);
+            }
+        });
+    })
+</script>
+</body>
+
+</html>

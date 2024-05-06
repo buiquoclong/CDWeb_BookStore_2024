@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/fragment::head}">
+</head>
+<body>
+<div id="wrapper">
+    <!--    navbar-->
+    <nav th:replace="~{admin/fragment::navbar}"></nav>
+
+    <!--    content-->
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1>Quản lý đơn hàng</h1>
+                <ol class="breadcrumb">
+                    <li><a href="/admin-page/book-management"><i class="fa fa-book"></i> Quản lý đơn hàng</a></li>
+                    <li class="active"><i class="fa fa-table"></i> Chi tiết đơn hàng</li>
+                </ol>
+            </div>
+        </div><!-- /.row -->
+        <div class="row">
+            <h3 class="text-center">Chi tiết</h3>
+        </div>
+        <div class="row">
+            <form class="well form-horizontal">
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Ngày tạo</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <input disabled type="date" th:value="${order.createdAt}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Họ và tên</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <input disabled id="name" name="name"
+                                   class="form-control" th:value="${order.name}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Số điện thoại</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <input disabled
+                                   class="form-control" id="phone" name="phone" th:value="${order.phone}"
+                                   type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Địa chỉ</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <input disabled
+                                   class="form-control" id="address" name="address" th:value="${order.address}"
+                                   type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Ghi chú</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <input disabled
+                                   class="form-control" name="note" th:value="${order.note}"
+                                   type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Tổng tiền</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <input disabled
+                                   class="form-control" th:value="${order.totalPrice}"
+                                   type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Trạng thái</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <input disabled
+                                   class="form-control" th:value="${order.status}"
+                                   type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Tài khoản</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <input disabled
+                                   class="form-control" th:value="${order.user.getUsername()}"
+                                   type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Sản phẩm</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <th:block th:each="line:${order.getOrderlines()}">
+                                <span class="mr-3" th:utext="${line.book.title}"></span>
+                                <span class="mr-3" th:utext="'SL: '+${line.quantity}"></span>
+                                <span th:utext="'Giá: '+${line.getTotalFormat()}"></span>
+                            </th:block>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <a type="button" class="btn btn-success btn-return" href="/admin-page/order-management">Danh
+                            sách đơn hàng</a>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+<th:block th:insert="~{admin/fragment::body/script}"></th:block>
+</body>
+</html>

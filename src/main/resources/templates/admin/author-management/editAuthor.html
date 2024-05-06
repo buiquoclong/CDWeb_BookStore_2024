@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/fragment::head}">
+</head>
+<body>
+<div id="wrapper">
+    <!--    navbar-->
+    <nav th:replace="~{admin/fragment::navbar}"></nav>
+
+    <!--    content-->
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1>Quản lý tác giả</h1>
+                <ol class="breadcrumb">
+                    <li><a href="/admin-page/author-management"><i class="fa fa-edit"></i> Quản lý tác giả</a></li>
+                    <li class="active"><i class="fa fa-table"></i> Sửa tác giả</li>
+                </ol>
+            </div>
+        </div><!-- /.row -->
+        <div class="row">
+            <h3 class="text-center">Sửa tác giả</h3>
+        </div>
+        <div class="row">
+            <form th:action="@{/admin-page/edit-author}" method="post"
+                  class="well form-horizontal" th:object="${author}">
+                <fieldset>
+                    <input type="hidden" name="authorID" th:value="${au.authorID}">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Họ tên</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <input id="name" name="name"
+                                   class="form-control"
+                                   required="true" th:value="${au.name}"
+                                   type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Mã tác giả</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <input id="code" name="authorCode"
+                                   class="form-control"
+                                   required="true"
+                                   type="text" th:value="${au.authorCode}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Ngày thêm</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <input id="createdAt" name="createdAt"
+                                   class="form-control"
+                                   th:value="${au.createdAt}"
+                                   type="date">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Ngày sửa</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <input id="updatedAt" name="updatedAt"
+                                   class="form-control"
+                                   th:value="${au.updatedAt}"
+                                   type="date">
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <button type="submit" class="btn btn-success">Cập nhật</button>
+                        <a type="button" class="btn btn-success btn-return" href="/admin-page/author-management">Trở lại</a>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+<th:block th:insert="~{admin/fragment::body/script}"></th:block>
+</body>
+</html>

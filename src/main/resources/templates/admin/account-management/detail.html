@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/fragment::head}">
+</head>
+<body>
+<div id="wrapper">
+    <!--    navbar-->
+    <nav th:replace="~{admin/fragment::navbar}"></nav>
+
+    <!--    content-->
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1>Quản lý tài khoản</h1>
+                <ol class="breadcrumb">
+                    <li><a href="/admin-page/book-management"><i class="fa fa-book"></i> Quản lý tài khoản</a></li>
+                    <li class="active"><i class="fa fa-table"></i> Chi tiết tài khoản</li>
+                </ol>
+            </div>
+        </div><!-- /.row -->
+        <div class="row">
+            <h3 class="text-center">Chi tiết</h3>
+        </div>
+        <div class="row">
+            <form class="well form-horizontal">
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Tên tài khoản</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <input disabled th:value="${account.username}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Họ và tên</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <input disabled id="description" name="description"
+                                      class="form-control" th:value="${account.fullname}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Ngày sinh</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <input disabled
+                                   class="form-control" th:value="${account.birthdate}"
+                                   type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Giới tính</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <input th:if="${account.gender} == true" disabled
+                                   class="form-control" value="Nữ"
+                                   type="text">
+                            <input th:if="${account.gender} == false" disabled
+                                   class="form-control" value="Nam"
+                                   type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Số điện thoại</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <input disabled
+                                   class="form-control" th:value="${account.phone}"
+                                   type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Trạng thái</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <input disabled class="form-control" th:if="${account.status} == true" value="Hoạt động"
+                                   type="text">
+                            <input disabled class="form-control" th:if="${account.status} == false" value="Ngừng hoạt động"
+                                   type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Ngày tạo</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <input disabled
+                                   class="form-control" th:value="${account.createdAt}"
+                                   type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Ngày sửa đổi</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <input disabled
+                                   class="form-control" th:value="${account.updatedAt}"
+                                   type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Vai trò</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <th:block th:each="role:${account.roles}">
+                                <p class="mr-3" th:utext="${role.name}"></p>
+                            </th:block>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <a type="button" class="btn btn-success btn-return" href="/admin-page/account-management">Danh
+                            sách tài khoản</a>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+<th:block th:insert="~{admin/fragment::body/script}"></th:block>
+</body>
+</html>

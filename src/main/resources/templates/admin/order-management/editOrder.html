@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/fragment::head}">
+</head>
+<body>
+<div id="wrapper">
+    <!--    navbar-->
+    <nav th:replace="~{admin/fragment::navbar}"></nav>
+
+    <!--    content-->
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1>Quản lý đơn hàng</h1>
+                <ol class="breadcrumb">
+                    <li><a href="/admin-page/book-management"><i class="fa fa-book"></i> Quản lý đơn hàng</a></li>
+                    <li class="active"><i class="fa fa-table"></i> Chỉnh sửa đơn hàng</li>
+                </ol>
+            </div>
+        </div><!-- /.row -->
+        <div class="row">
+            <h3 class="text-center">Chỉnh sửa đơn hàng</h3>
+        </div>
+        <div class="row">
+            <form th:action="@{/admin-page/edit-order}" method="post" th:object="${orderInput}"
+                  class="well form-horizontal" enctype="multipart/form-data">
+                <fieldset>
+                    <input type="hidden"
+                           name="orderID" class="form-control" th:value="${order.orderID}">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Tình trạng</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <select id="status" class="form-control" name="status">
+                                <option value="Đang xử lý">Đang xử lý</option>
+                                <option value="Đang giao hàng">Đang giao hàng</option>
+                                <option value="Giao hàng thành công">Giao hàng thành công</option>
+                                <option value="Giao hàng không thành công">Giao hàng không thành công</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Ghi chú</label>
+                        <div class="col-md-4 inputGroupContainer">
+                            <textarea id="note" name="note"
+                                      class="form-control" th:utext="${order.note}"></textarea>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <button type="submit" class="btn btn-success">Cập nhật</button>
+                        <a type="button" class="btn btn-success" href="/admin-page/order-management">Trở lại</a>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+<th:block th:insert="~{admin/fragment::body/script}"></th:block>
+<script type="text/javascript">
+    var loadImg = function (event) {
+        var images = $("#images").val();
+        for (let i = 0; i < images.length; i++) {
+            var img = document.createElement("img");
+            img.style.width = '250px';
+            img.src = URL.createObjectURL(event.target.files[i]);
+            var imglist = document.getElementById("img-list");
+            imglist.append(img);
+        }
+    };
+
+    $("#yearPublic").val($("#yearPublic").val());
+</script>
+</body>
+</html>
