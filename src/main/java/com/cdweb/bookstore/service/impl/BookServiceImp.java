@@ -36,4 +36,19 @@ public class BookServiceImp implements IBookService {
         return results;
     }
 
+    @Override
+    public BookDTO findById(int id) {
+        return bookConverter.toDTO(bookRepo.findById(id).get());
+    }
+
+
+    @Override
+    public List<BookDTO> findByCategoryIdAnQuantityGreaterThan(int categoryId, int quantity) {
+        List<BookDTO> results = new ArrayList<>();
+        for (BookEntity b : bookRepo.findFirst5ByCategoryCategoryIDAndQuantitySoldGreaterThan(categoryId, quantity)) {
+            results.add(bookConverter.toDTO(b));
+        }
+        return results;
+    }
+
 }
