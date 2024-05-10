@@ -8,4 +8,7 @@ public interface IBookService {
     public List<BookDTO> findHotBook(boolean isActive, boolean isHot);
 
     public List<BookDTO> findNewBook(boolean isActive, boolean isNew);
+    public BookDTO findById(int id);
+
+    public List<BookDTO> findByCategoryIdAnQuantityGreaterThan(int categoryId, int quantity);
 }
