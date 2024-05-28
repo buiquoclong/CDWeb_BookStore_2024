@@ -35,21 +35,25 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable();
-        http.authorizeRequests(authz -> authz
-                        .requestMatchers("/thanh-toan", "/gio-hang").authenticated()
-                        .requestMatchers("/admin-page/**").hasRole("ADMIN")
-                        .anyRequest().permitAll())
-                .formLogin()
-                .loginPage("/dang-nhap")
-                .loginProcessingUrl("/login")
-                .defaultSuccessUrl("/")
-                .failureUrl("/dang-nhap?error=true")
-                .usernameParameter("email")
-                .passwordParameter("password")
-                .and()
-                .logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/");
+        http.authorizeHttpRequests((authz) ->
+                        authz.requestMatchers("/thanh-toan", "/gio-hang").authenticated()
+                                .requestMatchers("/admin-page/**").hasRole("ADMIN").anyRequest().permitAll())
+                //login and logout
+                .formLogin().loginPage("/dang-nhap").loginProcessingUrl("/login").defaultSuccessUrl("/").failureUrl("/dang-nhap?error=true").usernameParameter("email").passwordParameter("password")
+                .and().logout().logoutUrl("/logout").logoutSuccessUrl("/")
+                //login with gg
+                .and().oauth2Login().loginPage("/dang-nhap").userInfoEndpoint().userService(oAuth2UserService).and().successHandler(new AuthenticationSuccessHandler() {
+                    //thêm hàm xử lí khi login thành công
+                    @Override
+                    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+                        CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
+                        String email = oauthUser.getAttribute("email");
+                        String username = oauthUser.getAttribute("name");
+                        //kiểm tra xem database đã có tài khoản gg này chưa, nếu chưa thì lưu vào db
+                        userService.processOAuthPostLogin(email, username);
+                        response.sendRedirect("/");
+                    }
+                });
         http.authenticationProvider(authProvider());
         return http.build();
     }

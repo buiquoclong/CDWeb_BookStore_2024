@@ -12,6 +12,11 @@ public interface IUserService {
     public String getConfirmCode(int id);
 
     public UserDTO confirmEmail(int id);
+    public UserDTO sendMailForgotPassword(String userEmail);
+    //change password
+    public boolean checkPass(String email, String password);
+
+    public void changePassword(String password, String email);
 
 
     public List<UserDTO> findAllUser();
@@ -21,4 +26,5 @@ public interface IUserService {
     public void deleteByUserId(int id);
 
     public void save(UserDTO user);
+    public void processOAuthPostLogin(String email, String username);
 }
