@@ -23,6 +23,8 @@ public interface IBookService {
     public List<BookDTO> findByPriceBetween(int from, int to, Pageable pageable);
     public List<BookDTO> findByPriceGreaterThan(int from, Pageable pageable);
 
+    public List<String> autoCompleteTilte(String title);
+
     //count
     public int countByCategory(String code);
 
@@ -41,4 +43,5 @@ public interface IBookService {
     public int countAllByPriceGreaterThan(int from);
     public List<BookDTO> findAllByActiveAndDicount(boolean active, double discountFrom, double discountTo, Pageable pageable);
     public int countAllByActiveAndDiscount(boolean active, double discountFrom, double discountTo);
+
 }

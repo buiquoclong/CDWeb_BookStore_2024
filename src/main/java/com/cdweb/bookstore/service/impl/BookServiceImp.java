@@ -124,6 +124,15 @@ public class BookServiceImp implements IBookService {
         }
         return results;
     }
+    @Override
+    public List<String> autoCompleteTilte(String title) {
+        List<BookEntity> books = bookRepo.findAllByActiveAndTitleContains(true, title);
+        List<String> result = new ArrayList<>();
+        for (BookEntity b : books) {
+            result.add(b.getTitle());
+        }
+        return result;
+    }
 
     @Override
     public int countByCategory(String code) {
