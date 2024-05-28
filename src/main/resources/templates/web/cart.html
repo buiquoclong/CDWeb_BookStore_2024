@@ -147,6 +147,9 @@
         // (lúc update quantity chỉ thay đổi tổng tiền cart item và subtotal, total chứ không thay đổi quantity)
         var cartItemValue = Number($("#totalAmountInput" + id).val());
         var getTotal = Number($("#subTotalInput").val());
+        console.log("tong", cartItemValue);
+        console.log("tong cong", getTotal);
+
         if ($("#check" + id).is(':checked')) {
             getTotal = getTotal + cartItemValue;
         } else {
