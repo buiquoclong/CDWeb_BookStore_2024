@@ -123,4 +123,8 @@ public class BookController {
         return bookService.findById(id);
     }
 
+    @GetMapping("/autocomplete")
+    public List<String> autoCompleteTitle(@RequestParam("title") String title) {
+        return bookService.autoCompleteTilte(title);
+    }
 }

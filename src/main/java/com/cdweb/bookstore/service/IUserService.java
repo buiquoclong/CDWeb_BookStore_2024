@@ -18,7 +18,6 @@ public interface IUserService {
 
     public void changePassword(String password, String email);
 
-
     public List<UserDTO> findAllUser();
 
     public UserDTO findByUserId(int id);
