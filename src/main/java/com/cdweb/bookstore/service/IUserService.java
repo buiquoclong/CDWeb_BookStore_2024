@@ -13,6 +13,8 @@ public interface IUserService {
 
     public UserDTO confirmEmail(int id);
     public UserDTO sendMailForgotPassword(String userEmail);
+    //change information
+    public void changeInformation(UserDTO user);
     //change password
     public boolean checkPass(String email, String password);
 

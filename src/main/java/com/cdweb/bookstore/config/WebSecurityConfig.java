@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
 import java.io.IOException;
 
@@ -34,29 +35,64 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable();
-        http.authorizeHttpRequests((authz) ->
-                        authz.requestMatchers("/thanh-toan", "/gio-hang").authenticated()
-                                .requestMatchers("/admin-page/**").hasRole("ADMIN").anyRequest().permitAll())
-                //login and logout
-                .formLogin().loginPage("/dang-nhap").loginProcessingUrl("/login").defaultSuccessUrl("/").failureUrl("/dang-nhap?error=true").usernameParameter("email").passwordParameter("password")
-                .and().logout().logoutUrl("/logout").logoutSuccessUrl("/")
-                //login with gg
-                .and().oauth2Login().loginPage("/dang-nhap").userInfoEndpoint().userService(oAuth2UserService).and().successHandler(new AuthenticationSuccessHandler() {
-                    //thêm hàm xử lí khi login thành công
-                    @Override
-                    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-                        CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
-                        String email = oauthUser.getAttribute("email");
-                        String username = oauthUser.getAttribute("name");
-                        //kiểm tra xem database đã có tài khoản gg này chưa, nếu chưa thì lưu vào db
-                        userService.processOAuthPostLogin(email, username);
-                        response.sendRedirect("/");
-                    }
-                });
+        http.csrf(csrf -> csrf.disable());
+
+        http.authorizeHttpRequests(authz -> authz
+                .requestMatchers("/thanh-toan", "/gio-hang").authenticated()
+                .requestMatchers("/admin-page/**").hasRole("ADMIN")
+                .anyRequest().permitAll()
+        );
+
+        http.formLogin(form -> form
+                .loginPage("/dang-nhap")
+                .loginProcessingUrl("/login")
+                .successHandler(savedRequestAwareAuthenticationSuccessHandler())
+                .failureUrl("/dang-nhap?error=true")
+                .usernameParameter("email")
+                .passwordParameter("password")
+        );
+
+        http.logout(logout -> logout
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/")
+        );
+
+        http.oauth2Login(oauth2 -> oauth2
+                .loginPage("/dang-nhap")
+                .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
+                .successHandler(new CustomAuthenticationSuccessHandler(userService))
+        );
+
         http.authenticationProvider(authProvider());
         return http.build();
     }
+
+    @Bean
+    public AuthenticationSuccessHandler savedRequestAwareAuthenticationSuccessHandler() {
+        return new SavedRequestAwareAuthenticationSuccessHandler();
+    }
+
+    private static class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+
+        private final IUserService userService;
+
+        public CustomAuthenticationSuccessHandler(IUserService userService) {
+            this.userService = userService;
+        }
+
+        @Override
+        public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+            CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
+            String email = oauthUser.getAttribute("email");
+            String username = oauthUser.getAttribute("name");
+
+            // Kiểm tra và xử lý tài khoản Google đăng nhập
+            userService.processOAuthPostLogin(email, username);
+            // Chuyển hướng người dùng tới URL trước khi đăng nhập
+            new SavedRequestAwareAuthenticationSuccessHandler().onAuthenticationSuccess(request, response, authentication);
+        }
+    }
+
     @Bean
     public DaoAuthenticationProvider authProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
