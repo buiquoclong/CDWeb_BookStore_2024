@@ -124,6 +124,23 @@ public class UserServiceImp implements IUserService {
     }
 
     @Override
+    public void changeInformation(UserDTO user) {
+        String username = "";
+        String fullname = "";
+        String phone = "";
+        LocalDate birthdate = LocalDate.now();
+        //gender: true là nữ, false là nam
+        boolean gender = false;
+        UserEntity userFromDb = userRepo.findByEmailIgnoreCaseAndIsEnableAndStatus(user.getEmail(), true, true);
+        if (user.getUsername() != null) username = user.getUsername();
+        if (user.getFullname() != null) fullname = user.getFullname();
+        if (user.getBirthdate() != null)
+            birthdate = user.getBirthdate();
+        if (user.isGender()) gender = user.isGender();
+        if (user.getPhone() != null) phone = user.getPhone();
+        userRepo.updateUser(userFromDb.getUserID(), username, fullname, birthdate, gender, phone, LocalDate.now());
+    }
+    @Override
     public boolean checkPass(String email, String password) {
         String userPass = userRepo.findByEmailIgnoreCaseAndIsEnableAndStatus(email, true, true).getPassword();
         //dùng passwordEndcoder để kiểm tra xem mk nhập vào có giống vs mk đã mã hóa của người dùng
