@@ -51,6 +51,7 @@ public class BookServiceImp implements IBookService {
         }
         return results;
     }
+
     @Override
     public List<BookDTO> findByCategoryCode(String categoryCode, Pageable pageable) {
         List<BookDTO> results = new ArrayList<>();
@@ -124,6 +125,7 @@ public class BookServiceImp implements IBookService {
         }
         return results;
     }
+
     @Override
     public List<String> autoCompleteTilte(String title) {
         List<BookEntity> books = bookRepo.findAllByActiveAndTitleContains(true, title);
@@ -132,6 +134,11 @@ public class BookServiceImp implements IBookService {
             result.add(b.getTitle());
         }
         return result;
+    }
+
+    @Override
+    public void updateQuantity(int quantity, int id) {
+        bookRepo.updateQuantity(quantity, id);
     }
 
     @Override

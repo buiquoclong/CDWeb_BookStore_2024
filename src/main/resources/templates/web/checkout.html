@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="web/fragment::head(title='Bookstore - Đặt hàng')">
+<head th:replace="~{web/fragment::head(title='Bookstore - Đặt hàng')}">
 </head>
 
 <body>
@@ -44,24 +44,24 @@
                     <div class="row">
                         <div class="col-md-6 form-group">
                             <label>Họ và tên</label>
-                            <input th:value="${user.fullname} ? ${user.fullname}" class="form-control" type="text"
+                            <input th:value="${user.fullname} ? ${user.fullname}" class="form-control" type="text" required
                                    placeholder="Họ và tên" name="name">
                         </div>
                         <div class="col-md-6 form-group">
                             <label>E-mail</label>
                             <input th:value="${user.email}" class="form-control" type="text"
-                                   placeholder="Vui lòng nhập email" name="email">
+                                   placeholder="Vui lòng nhập email" name="email" required>
                         </div>
                         <div class="col-md-6 form-group">
                             <label>Số điện thoại</label>
-                            <input id="phone" onblur="checkPhone()" th:value="${user.phone} ? ${user.phone}"
+                            <input id="phone" onblur="checkPhone()" th:value="${user.phone} ? ${user.phone}" required
                                    class="form-control"
                                    type="text" placeholder="Nhập số điện thoại" name="phone">
                             <span id='phoneError' class='text-center' style='color: red; font-size: smaller'></span>
                         </div>
                         <div class="col-md-6 form-group">
                             <label>Địa chỉ</label>
-                            <input id="address" class="form-control" onblur="checkAddress()" type="text"
+                            <input id="address" class="form-control" onblur="checkAddress()" type="text" required
                                    placeholder="Nhập địa chỉ" name="address">
                             <span id='addressError' class='text-center' style='color: red; font-size: smaller'></span>
                         </div>
