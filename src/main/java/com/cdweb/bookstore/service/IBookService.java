@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface IBookService {
+
     public List<BookDTO> findHotBook(boolean isActive, boolean isHot);
 
     public List<BookDTO> findNewBook(boolean isActive, boolean isNew);
@@ -19,6 +20,9 @@ public interface IBookService {
     public List<BookDTO> findAllByAuthorCode(String code, Pageable pageable);
 
     public List<BookDTO> findAll(Pageable pageable);
+    public List<BookDTO> findAll();
+    public void deleteById(int id);
+
 
     public List<BookDTO> findAllHotBook(boolean isActive, boolean isHot, Pageable pageable);
 
@@ -54,5 +58,6 @@ public interface IBookService {
     public List<BookDTO> findAllByActiveAndDicount(boolean active, double discountFrom, double discountTo, Pageable pageable);
 
     public int countAllByActiveAndDiscount(boolean active, double discountFrom, double discountTo);
+    public void save(BookDTO book);
 
 }
