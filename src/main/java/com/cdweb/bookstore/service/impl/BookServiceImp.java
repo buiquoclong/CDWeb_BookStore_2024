@@ -2,8 +2,13 @@ package com.cdweb.bookstore.service.impl;
 
 import com.cdweb.bookstore.converter.BookConverter;
 import com.cdweb.bookstore.dto.BookDTO;
+import com.cdweb.bookstore.dto.BookImageDTO;
 import com.cdweb.bookstore.entities.BookEntity;
+import com.cdweb.bookstore.entities.BookImageEntity;
+import com.cdweb.bookstore.repository.AuthorRepository;
+import com.cdweb.bookstore.repository.BookImageRepository;
 import com.cdweb.bookstore.repository.BookRepository;
+import com.cdweb.bookstore.repository.CategoryRepository;
 import com.cdweb.bookstore.service.IBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +23,12 @@ public class BookServiceImp implements IBookService {
     private BookRepository bookRepo;
     @Autowired
     private BookConverter bookConverter;
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private AuthorRepository authorRepository;
+    @Autowired
+    private BookImageRepository bookImageRepository;
 
     @Override
     public List<BookDTO> findHotBook(boolean isActive, boolean isHot) {
@@ -39,10 +50,13 @@ public class BookServiceImp implements IBookService {
 
     @Override
     public BookDTO findById(int id) {
-        return bookConverter.toDTO(bookRepo.findById(id).get());
+        return bookConverter.toDTO(bookRepo.findById(id));
     }
 
-
+    @Override
+    public void deleteById(int id) {
+        bookRepo.deleteById(id);
+    }
     @Override
     public List<BookDTO> findByCategoryIdAnQuantityGreaterThan(int categoryId, int quantity) {
         List<BookDTO> results = new ArrayList<>();
@@ -76,6 +90,15 @@ public class BookServiceImp implements IBookService {
 
         //hàm findAll(pageable) sẽ trả về Page<BookEntity>, để chuyển Page thành List thì dùng hàm getContent()
         for (BookEntity b : bookRepo.findAll(pageable).getContent()) {
+            results.add(bookConverter.toDTO(b));
+        }
+        return results;
+    }
+
+    @Override
+    public List<BookDTO> findAll() {
+        List<BookDTO> results = new ArrayList<>();
+        for (BookEntity b : bookRepo.findAll()) {
             results.add(bookConverter.toDTO(b));
         }
         return results;
@@ -193,6 +216,25 @@ public class BookServiceImp implements IBookService {
     @Override
     public int countAllByActiveAndDiscount(boolean active, double from, double to) {
         return bookRepo.countAllByActiveAndDiscountPercentBetween(active, from, to);
+    }
+
+    @Override
+    public void save(BookDTO book) {
+        BookEntity bookEntity = new BookEntity();
+        if (book.getId() != 0) {
+            bookEntity = bookConverter.fromDtoToEntity(book, bookRepo.findById(book.getId()));
+            bookEntity.setCategory(categoryRepository.findByCategoryID(book.getCategory().getCategoryID()));
+            bookEntity.setAuthor(authorRepository.findByAuthorID(book.getAuthor().getAuthorID()));
+        } else
+            bookEntity = bookConverter.toEntity(book);
+        bookEntity = bookRepo.save(bookEntity);
+        for (BookImageDTO i : book.getImages()) {
+            BookImageEntity image = new BookImageEntity();
+            image.setPath(i.getPath());
+            if (book.getId() != 0) image.setBook(bookRepo.findById(book.getId()));
+            else image.setBook(bookRepo.findFirstByOrderByIdDesc());
+            bookImageRepository.save(image);
+        }
     }
 
 }

@@ -13,11 +13,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
 import java.io.IOException;
+
 
 @Configuration
 public class WebSecurityConfig {
@@ -33,43 +36,57 @@ public class WebSecurityConfig {
     @Autowired
     private PasswordEncoderConfig passwordEncoderConfig;
 
+    @Autowired
+    private ClientRegistrationRepository clientRegistrationRepository;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable());
+        http
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(authz -> authz
+                        .requestMatchers("/thanh-toan", "/gio-hang").authenticated()
+                        .requestMatchers("/admin-page/**").hasRole("ADMIN")
+                        .anyRequest().permitAll())
+                .formLogin(form -> form
+                        .loginPage("/dang-nhap")
+                        .loginProcessingUrl("/login")
+                        .defaultSuccessUrl("/")
+                        .failureUrl("/dang-nhap?error=true")
+                        .usernameParameter("email")
+                        .passwordParameter("password"))
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/"))
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/dang-nhap")
+                        .authorizationEndpoint(authorization -> authorization
+                                .authorizationRequestResolver(customOAuth2AuthorizationRequestResolver()))
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(oAuth2UserService))
+                        .successHandler(new AuthenticationSuccessHandler() {
+                            @Override
+                            public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+                                CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
+                                String email = oauthUser.getAttribute("email");
+                                String username = oauthUser.getAttribute("name");
 
-        http.authorizeHttpRequests(authz -> authz
-                .requestMatchers("/thanh-toan", "/gio-hang").authenticated()
-                .requestMatchers("/admin-page/**").hasRole("ADMIN")
-                .anyRequest().permitAll()
-        );
+                                // Kiểm tra và xử lý tài khoản Google đăng nhập
+                                userService.processOAuthPostLogin(email, username);
+                                response.sendRedirect("/");
+                            }
+                        }));
 
-        http.formLogin(form -> form
-                .loginPage("/dang-nhap")
-                .loginProcessingUrl("/login")
-                .successHandler(savedRequestAwareAuthenticationSuccessHandler())
-                .failureUrl("/dang-nhap?error=true")
-                .usernameParameter("email")
-                .passwordParameter("password")
-        );
 
-        http.logout(logout -> logout
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/")
-        );
-
-        http.oauth2Login(oauth2 -> oauth2
-                .loginPage("/dang-nhap")
-                .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
-                .successHandler(new CustomAuthenticationSuccessHandler(userService))
-        );
-
-        http.authenticationProvider(authProvider());
         return http.build();
     }
 
     @Bean
     public AuthenticationSuccessHandler savedRequestAwareAuthenticationSuccessHandler() {
         return new SavedRequestAwareAuthenticationSuccessHandler();
+    }
+
+    public OAuth2AuthorizationRequestResolver customOAuth2AuthorizationRequestResolver() {
+        return new CustomAuthorizationRequestResolver(clientRegistrationRepository);
     }
 
     private static class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {

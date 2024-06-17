@@ -64,5 +64,6 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
 
     public int countAllByActiveAndDiscountPercentBetween(boolean active, double discountFrom, double discountTo);
 
-
+    public BookEntity findFirstByOrderByIdDesc();
+    public BookEntity findById(int id);
 }
