@@ -18,6 +18,7 @@ public class CustomAuthorizationRequestResolver implements OAuth2AuthorizationRe
 
     private final OAuth2AuthorizationRequestResolver defaultResolver;
 
+    //Khởi tạo đường dẫn mặc định cho login gg
     public CustomAuthorizationRequestResolver(ClientRegistrationRepository repo) {
         this.defaultResolver = new DefaultOAuth2AuthorizationRequestResolver(repo, "/oauth2/authorization");
     }

@@ -122,7 +122,7 @@ public class OrderController {
         mav.addObject("message", "Đặt hàng thành công. Vui lòng truy cập trang đơn hàng để theo dõi.");
         return mav;
     }
-
+//    order page
     @GetMapping("/don-hang")
     public ModelAndView checkOrder(Authentication authentication) {
         ModelAndView mav = new ModelAndView("web/checkOrder.html");
