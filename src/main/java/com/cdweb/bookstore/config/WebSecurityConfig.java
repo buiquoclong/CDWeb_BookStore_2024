@@ -42,31 +42,31 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf.disable()) // vô hiệu hóa tính năng bảo vệ CSRF
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/thanh-toan", "/gio-hang").authenticated()
-                        .requestMatchers("/admin-page/**").hasRole("ADMIN")
+                        .requestMatchers("/thanh-toan", "/gio-hang").authenticated() // cần xác thực tài khoản
+                        .requestMatchers("/admin-page/**").hasRole("ADMIN") // phân quyền cho admin
                         .anyRequest().permitAll())
                 .formLogin(form -> form
                         .loginPage("/dang-nhap")
                         .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/")
-                        .failureUrl("/dang-nhap?error=true")
-                        .usernameParameter("email")
-                        .passwordParameter("password"))
+                        .defaultSuccessUrl("/") // login success
+                        .failureUrl("/dang-nhap?error=true") // login failed
+                        .usernameParameter("email")    // username
+                        .passwordParameter("password")) // password
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/"))
-                .oauth2Login(oauth2 -> oauth2
+                        .logoutSuccessUrl("/")) // logout success
+                .oauth2Login(oauth2 -> oauth2 // login google
                         .loginPage("/dang-nhap")
-                        .authorizationEndpoint(authorization -> authorization
+                        .authorizationEndpoint(authorization -> authorization // set up url default google
                                 .authorizationRequestResolver(customOAuth2AuthorizationRequestResolver()))
                         .userInfoEndpoint(userInfo -> userInfo
-                                .userService(oAuth2UserService))
-                        .successHandler(new AuthenticationSuccessHandler() {
+                                .userService(oAuth2UserService)) // lấy thông tin người dùng từ google
+                        .successHandler(new AuthenticationSuccessHandler() { // xử lý khi login google success
                             @Override
                             public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-                                CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
+                                CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal(); // trả về đại diện đã xác thực (thông tin)
                                 String email = oauthUser.getAttribute("email");
                                 String username = oauthUser.getAttribute("name");
 
@@ -89,27 +89,7 @@ public class WebSecurityConfig {
         return new CustomAuthorizationRequestResolver(clientRegistrationRepository);
     }
 
-    private static class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
-
-        private final IUserService userService;
-
-        public CustomAuthenticationSuccessHandler(IUserService userService) {
-            this.userService = userService;
-        }
-
-        @Override
-        public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-            CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
-            String email = oauthUser.getAttribute("email");
-            String username = oauthUser.getAttribute("name");
-
-            // Kiểm tra và xử lý tài khoản Google đăng nhập
-            userService.processOAuthPostLogin(email, username);
-            // Chuyển hướng người dùng tới URL trước khi đăng nhập
-            new SavedRequestAwareAuthenticationSuccessHandler().onAuthenticationSuccess(request, response, authentication);
-        }
-    }
-
+    // xác thực người dùng
     @Bean
     public DaoAuthenticationProvider authProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
